@@ -16,6 +16,18 @@
             <argument type="service" id="hakam_db_config.service"/>
         </service>
 
+        <service id="Hakam\MultiTenancyBundle\Command\CreateDatabaseCommand">
+            <tag name="console.command" />
+            <argument type="service" id="Doctrine\Common\Persistence\ManagerRegistry"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="event_dispatcher" />
+        </service>
+        <service id="Hakam\MultiTenancyBundle\Command\DropDatabaseCommand">
+            <tag name="console.command" />
+            <argument type="service" id="Doctrine\Common\Persistence\ManagerRegistry"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="event_dispatcher" />
+        </service>
         <service id="Hakam\MultiTenancyBundle\Command\DiffCommand">
             <tag name="console.command" />
             <argument type="service" id="Doctrine\Common\Persistence\ManagerRegistry"/>

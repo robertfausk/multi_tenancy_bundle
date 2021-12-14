@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Hakam\MultiTenancyBundle\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -20,7 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-final class CreateDatabaseCommand extends Command
+final class DropDatabaseCommand extends Command
 {
     /**
      * @var Registry
@@ -46,20 +47,22 @@ final class CreateDatabaseCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('tenant:database:create')
+            ->setName('tenant:database:drop')
             ->setDescription('Proxy to launch doctrine:database:create with custom database .')
             ->addArgument('dbId', InputArgument::REQUIRED, 'Tenant Db Identifier for database to be created.')
-            ->addOption('if-not-exists', null, InputOption::VALUE_NONE, 'Don\'t trigger an error, when the database already exists');
+            ->addOption('if-exists', null, InputOption::VALUE_NONE, 'Don\'t trigger an error, when the database doesn\'t exist')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Set this parameter to execute this action');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $newInput = new ArrayInput([
             '--connection' => 'tenant',
-            '--if-not-exists' => $input->getOption('if-not-exists'),
+            '--if-exists' => $input->getOption('if-exists'),
+            '--force' => $input->getOption('force'),
         ]);
         $newInput->setInteractive($input->isInteractive());
-        $otherCommand = new CreateDatabaseDoctrineCommand($this->registry);
+        $otherCommand = new DropDatabaseDoctrineCommand($this->registry);
         $this->getDependencyFactory($input);
         $otherCommand->setApplication(new Application($this->container->get('kernel')));
         $otherCommand->run($newInput, $output);
