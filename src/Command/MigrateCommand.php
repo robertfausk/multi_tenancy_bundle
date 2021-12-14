@@ -2,7 +2,7 @@
 
 namespace Hakam\MultiTenancyBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Console\Command\Command;
@@ -21,7 +21,7 @@ final class MigrateCommand extends Command
     use CommandTrait;
 
     /**
-     * @var ManagerRegistry
+     * @var Registry
      */
     private $registry;
     /**
@@ -34,7 +34,7 @@ final class MigrateCommand extends Command
     private $eventDispatcher;
 
     public function __construct(
-        ManagerRegistry $registry,
+        Registry $registry,
         ContainerInterface $container,
         EventDispatcherInterface $eventDispatcher)
     {

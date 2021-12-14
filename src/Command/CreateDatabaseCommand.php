@@ -1,10 +1,9 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Hakam\MultiTenancyBundle\Command;
 
-
-use Doctrine\Bundle\DoctrineBundle\Command\Proxy\UpdateSchemaDoctrineCommand;
+use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
@@ -20,12 +19,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @author Ramy Hakam <pencilsoft1@gmail.com>
- */
-final class UpdateSchemaCommand extends Command
+final class CreateDatabaseCommand extends Command
 {
-
     /**
      * @var Registry
      */
@@ -50,29 +45,31 @@ final class UpdateSchemaCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('tenant:schema:update')
-            ->setDescription('Proxy to launch doctrine:schema:update with custom database .')
-            ->addArgument('dbId', InputArgument::REQUIRED, 'Tenant Db Identifier to create migration.');
+            ->setName('tenant:database:create')
+            ->setDescription('Proxy to launch doctrine:database:create with custom database .')
+            ->addArgument('dbId', InputArgument::REQUIRED, 'Tenant Db Identifier for database to be created.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $newInput = new ArrayInput([
-            // ToDo: Add command options list
+            '--connection' => 'tenant',
         ]);
         $newInput->setInteractive($input->isInteractive());
-        $otherCommand = new UpdateSchemaDoctrineCommand();
+        $otherCommand = new CreateDatabaseDoctrineCommand($this->registry);
         $this->getDependencyFactory($input);
-        $otherCommand->setApplication(new Application($this->container->get( 'kernel' )));
+        $otherCommand->setApplication(new Application($this->container->get('kernel')));
         $otherCommand->run($newInput, $output);
 
         return 0;
     }
 
-    private function getDependencyFactory(InputInterface $input): DependencyFactory
+    protected function getDependencyFactory(InputInterface $input): DependencyFactory
     {
-        $switchEvent = new SwitchDbEvent($input->getArgument('dbId'));
-        $this->eventDispatcher->dispatch($switchEvent);
+        if ($input->getArgument('dbId') !== null) {
+            $switchEvent = new SwitchDbEvent($input->getArgument('dbId'), false);
+            $this->eventDispatcher->dispatch($switchEvent);
+        }
         /** @var EntityManagerInterface $em */
         $em = $this->registry->getManager('tenant');
 

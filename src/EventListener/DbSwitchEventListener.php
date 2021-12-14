@@ -6,7 +6,6 @@ namespace Hakam\MultiTenancyBundle\EventListener;
 
 use Hakam\MultiTenancyBundle\Event\SwitchDbEvent;
 use Hakam\MultiTenancyBundle\Services\DbConfigService;
-use Hakam\MultiTenancyBundle\Services\TenantDbConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -45,5 +44,8 @@ class DbSwitchEventListener implements EventSubscriberInterface
         $tenantConnection = $this->container->get('doctrine')->getConnection('tenant');
         $tenantConnection->changeParams($dbConfig->getDbName(), $dbConfig->getDbUsername(), $dbConfig->getDbPassword());
         $tenantConnection->reconnect();
+        if ($switchDbEvent->isWithReconnect()) {
+            $tenantConnection->reconnect();
+        }
     }
 }

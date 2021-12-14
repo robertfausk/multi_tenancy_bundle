@@ -16,16 +16,24 @@ class SwitchDbEvent extends Event
      */
     private $dbIndex;
 
-    public function __construct( string $tenantDbIndex)
-   {
-       $this->dbIndex = $tenantDbIndex;
-   }
-
     /**
-     * @return string
+     * @var bool
      */
+    private $isWithReconnect;
+
+    public function __construct( string $tenantDbIndex, bool $isWithReconnect = true)
+    {
+        $this->dbIndex = $tenantDbIndex;
+        $this->isWithReconnect = $isWithReconnect;
+    }
+
     public function getDbIndex(): string
     {
         return $this->dbIndex;
+    }
+
+    public function isWithReconnect(): bool
+    {
+        return $this->isWithReconnect;
     }
 }
