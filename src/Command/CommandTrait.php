@@ -8,7 +8,7 @@ use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Hakam\DoctrineDbSwitcherBundle\Event\SwitchDbEvent;
+use Hakam\MultiTenancyBundle\Event\SwitchDbEvent;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**

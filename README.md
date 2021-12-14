@@ -125,7 +125,7 @@ hakam_multi_tenancy_bundle:
     host:     127.0.0.1
     driver:   pdo_mysql
     charset:  utf8 
-    dbname:   tanent1                                           # default tenant database to init the tenant connection
+    dbname:   tenant1                                           # default tenant database to init the tenant connection
     user:     root                                              # default tenant database username
     password: null                                              # default tenant database password
   tenant_migration:                                             # tenant db migration configurations, Its recommended to have a different migration for tenants dbs than you main migration config

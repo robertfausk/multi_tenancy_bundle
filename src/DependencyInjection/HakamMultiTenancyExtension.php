@@ -4,7 +4,7 @@
 namespace Hakam\MultiTenancyBundle\DependencyInjection;
 
 
-use Hakam\DoctrineDbSwitcherBundle\Doctrine\DBAL\TenantConnection;
+use Hakam\MultiTenancyBundle\Doctrine\DBAL\TenantConnection;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
