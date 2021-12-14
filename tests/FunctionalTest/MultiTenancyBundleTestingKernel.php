@@ -13,6 +13,9 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class MultiTenancyBundleTestingKernel extends Kernel
 {
+    /**
+     * @var array
+     */
     private $hakamAuthenticationConfig;
 
     public function __construct(array $config = [])
@@ -21,7 +24,7 @@ class MultiTenancyBundleTestingKernel extends Kernel
         parent::__construct('test', true);
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [
             new FrameworkBundle(),
@@ -31,7 +34,7 @@ class MultiTenancyBundleTestingKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('hakam_multi_tenancy', $this->hakamAuthenticationConfig);
@@ -41,7 +44,7 @@ class MultiTenancyBundleTestingKernel extends Kernel
         });
     }
 
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         return __DIR__;
     }

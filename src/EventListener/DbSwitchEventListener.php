@@ -30,7 +30,7 @@ class DbSwitchEventListener implements EventSubscriberInterface
         $this->dbConfigService = $dbConfigService;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
       return
       [
@@ -38,7 +38,7 @@ class DbSwitchEventListener implements EventSubscriberInterface
       ];
     }
 
-    public function onHakamMultiTenancyBundleEventSwitchDbEvent( SwitchDbEvent $switchDbEvent)
+    public function onHakamMultiTenancyBundleEventSwitchDbEvent(SwitchDbEvent $switchDbEvent): void
     {
         $dbConfig = $this->dbConfigService->findDbConfig($switchDbEvent->getDbIndex());
 

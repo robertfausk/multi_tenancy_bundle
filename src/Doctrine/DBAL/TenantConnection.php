@@ -9,6 +9,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Events;
 use Doctrine\DBAL\Event;
+use Doctrine\DBAL\Exception;
 
 /**
  * @author Ramy Hakam <pencilsoft1@gmail.com>
@@ -26,11 +27,12 @@ class TenantConnection extends Connection
     /**
      * ConnectionSwitcher constructor.
      *
-     * @param $params
-     * @param Driver $driver
+     * @param                    $params
+     * @param Driver             $driver
      * @param Configuration|null $config
-     * @param EventManager|null $eventManager
-     * @throws \Doctrine\DBAL\DBALException
+     * @param EventManager|null  $eventManager
+     *
+     * @throws Exception
      */
     public function __construct($params, Driver $driver, ?Configuration $config = null, ?EventManager $eventManager = null)
     {
@@ -97,7 +99,7 @@ class TenantConnection extends Connection
         return $this->params;
     }
 
-    public function close()
+    public function close(): void
     {
         $this->_conn = null;
 
