@@ -43,7 +43,6 @@ class DbSwitchEventListener implements EventSubscriberInterface
 
         $tenantConnection = $this->container->get('doctrine')->getConnection('tenant');
         $tenantConnection->changeParams($dbConfig->getDbName(), $dbConfig->getDbUsername(), $dbConfig->getDbPassword());
-        $tenantConnection->reconnect();
         if ($switchDbEvent->isWithReconnect()) {
             $tenantConnection->reconnect();
         }
