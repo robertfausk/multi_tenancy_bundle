@@ -118,16 +118,16 @@ class DbService
             ? $tmpConnection->createSchemaManager()
             : $tmpConnection->getSchemaManager();
 
-        $shouldNotCreateDatabase = !in_array($dbName, $schemaManager->listDatabases());
+        $isDatabaseExisting = \in_array($dbName, $schemaManager->listDatabases());
 
-        if ($shouldNotCreateDatabase) {
+        if (!$isDatabaseExisting) {
             throw new MultiTenancyException(sprintf('Database %s does not exist.', $dbName), Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $schemaManager->dropDatabase($dbName);
         } catch (\Exception $e) {
-            throw new MultiTenancyException(sprintf('Unable to create new tenant database %s: %s', $dbName, $e->getMessage()), $e->getCode(), $e);
+            throw new MultiTenancyException(sprintf('Unable to drop existing tenant database %s: %s', $dbName, $e->getMessage()), $e->getCode(), $e);
         }
 
         $tmpConnection->close();
@@ -155,5 +155,10 @@ class DbService
     public function getDefaultTenantDataBase(): TenantDbConfigurationInterface
     {
         return $this->entityManager->getRepository($this->tenantDbListEntity)->findOneBy(['databaseStatus' => DatabaseStatusEnum::DATABASE_CREATED]);
+    }
+
+    public function getDatabaseById(int $dbId): TenantDbConfigurationInterface
+    {
+        return $this->entityManager->getRepository($this->tenantDbListEntity)->findOneBy(['id' => $dbId]);
     }
 }

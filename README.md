@@ -62,13 +62,15 @@ doctrine_migrations:
 11. ts recommended having your tenant entities in a different directory from your Main entities.
 12. You can execute doctrine migration commands using our proxy commands for tenant database.
 
-        php bin/console tenant:database:create   # t:d:c  for short , To create and exceute  migraiton for non exist tenant db
+        php bin/console tenant:database:create   # t:d:c  for short, to create and execute migration for non exist tenant db
 
-        php bin/console tenant:migration:diff 1   # t:m:d 1 for short , To generate migraiton for tenant db  => 1
+        php bin/console tenant:database:drop 1   # t:d:d 1  for short, to drop existing tenant db
+
+        php bin/console tenant:migration:diff 1   # t:m:d 1 for short, to generate migration for tenant db  => 1
         
-        php bin/console tenant:migration:migrate 1  # t:m:m 1, To run migraitons for tenant db  => 1
+        php bin/console tenant:migration:migrate 1  # t:m:m 1 for short, to run migrations for tenant db  => 1
         
-        # Pass tenant identifier is optional and if it null the command will be executed on the defualt tenant db. 
+        # Pass tenant identifier is optional and if it null the command will be executed on the default tenant db. 
         # You can use the same options here for the same doctrine commands.
   ### Example
  You can check  this  project example   [Multi-Tenant Bundle Example](https://github.com/RamyHakam/multi-tenancy-project-example) to see how to use the bundle.
