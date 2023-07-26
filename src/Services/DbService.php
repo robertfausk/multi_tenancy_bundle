@@ -108,9 +108,9 @@ class DbService
      */
     public function dropDatabase(string $dbName): void
     {
-        $connection = $this->tenantEntityManager->getConnection();
-
-        $params = $connection->getParams();
+        $params = [
+            "url" => $this->dbCredentials['db_url'],
+        ];
 
         $tmpConnection = DriverManager::getConnection($params);
 
@@ -159,6 +159,11 @@ class DbService
 
     public function getDatabaseById(int $dbId): TenantDbConfigurationInterface
     {
-        return $this->entityManager->getRepository($this->tenantDbListEntity)->findOneBy(['id' => $dbId]);
+        $tenantDbConfiguration = $this->entityManager->getRepository($this->tenantDbListEntity)->findOneBy(['id' => $dbId]);
+        if (!$tenantDbConfiguration) {
+            throw new MultiTenancyException(sprintf('No dbConfiguration found for dbId "%s"', $dbId));
+        }
+
+        return $tenantDbConfiguration;
     }
 }
